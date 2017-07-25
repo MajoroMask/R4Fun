@@ -7,7 +7,7 @@ jbvplot <- function(df.in) {
     ) + 
         geom_violin(aes(fill = variable), alpha = I(0.1)) +  
         # 提琴图图层，透明度0.1
-        geom_boxplot(alpha = I(0.8), outlier.size = NA) +
+        geom_boxplot(alpha = I(0.8), outlier.size = NULL, width = I(0.2)) +
         # 箱线图图层，透明度0.8，同时去除离群值
         geom_jitter(width = 0.25, size = 1.5) + 
         # 扰动点图图层
