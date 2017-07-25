@@ -39,6 +39,7 @@ radar_plot <- function(df.in, x.cut = 50, y.cut = 50) {
     return(p)
 }
 
+# examples ----
 data("diamonds")
 df.d <- diamonds[, c("carat", "price")]
 colnames(df.d) <- c("x", "y")
