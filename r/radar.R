@@ -1,6 +1,6 @@
 # 雷达图，用于对二维数据分布进行可视化
 
-radar_plot <- function(df.in, x.cut = 50, y.cut = 50) {
+radar_plot <- function(df.in, x.cut = 50, y.cut = 100) {
     # 雷达图
     
     # 参数
@@ -8,6 +8,19 @@ radar_plot <- function(df.in, x.cut = 50, y.cut = 50) {
     #     y.cut：径向坐标轴的分隔数，默认50
     # 
     require(ggplot2)
+    # if (!("x" %in% colnames(df.in) & "y" %in% colnames(df.in))) {
+    #     if (ncol(df.in) != 2) {
+    #         stop("Input data frame must be of length 2 or with column x and y")
+    #     } else {
+    #         if (!("x" %in% colnames(df.in))) {
+    #             colnames(df.in)[colnames(df.in) != "y"] <- "x"
+    #         } else if (!("y" %in% colnames(df.in))) {
+    #             colnames(df.in)[colnames(df.in) != "x"] <- "y"
+    #         } else {
+    #             colnames(df.in) <- c("x", "y")
+    #         }
+    #     }
+    # }
     df.in$x <- cut(df.in$x, breaks = x.cut)
     df.in$y <- cut(df.in$y, breaks = y.cut)
     df.in <- as.data.frame(table(df.in))
@@ -36,10 +49,10 @@ radar_plot <- function(df.in, x.cut = 50, y.cut = 50) {
             panel.border = element_rect()
         ) + 
         coord_polar()  # 极坐标慢好多，好烦啊
-    return(p)
 }
 
 # examples ----
+library(ggplot2)
 data("diamonds")
 df.d <- diamonds[, c("carat", "price")]
 colnames(df.d) <- c("x", "y")
