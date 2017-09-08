@@ -1,4 +1,4 @@
-my_install_packages <- function(pkgs, repos) {
+my_install_packages <- function(pkgs, repos = "CRAN") {
     # install packages using domastic CRAN / BioC repos
     # 
     # override CRAN and BioC repos ----
@@ -31,7 +31,7 @@ my_install_packages <- function(pkgs, repos) {
         }, 
         pkg = pkgs, rep = repos
     )
-    options(old_opt)
+    # options(old_opt)
     invisible(NULL)
 }
 

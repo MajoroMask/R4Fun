@@ -1,7 +1,7 @@
 library(openxlsx)
 # functions ----
 write_heatmap_table <- function(
-    wb, sheet = 1, x, color = "default", color_ladder = 10, 
+    wb, sheet = 1, x, color = "default", color_legend = 10, 
     order_row = TRUE, order_col = TRUE, 
     row_names = TRUE, col_names = TRUE
 ) {
@@ -9,19 +9,20 @@ write_heatmap_table <- function(
     # 
     # deal with args ----
     require(openxlsx)
-    if (isTRUE(color_ladder)) {
-        color_ladder <- 10
+    require(scales)
+    
+    if (isTRUE(color_legend)) {
+        color_legend <- 10
     }
-    if (!is.numeric(color_ladder)) {
-        stop("Wrong color_ladder @ write_heatmap_table")
+    if (!is.numeric(color_legend)) {
+        stop("Wrong color_legend @ write_heatmap_table")
     }
     if (color == "default") {
         color <- colorRampPalette(
             rev(RColorBrewer::brewer.pal(n = 7, name = "RdYlBu"))
         )(100)
     }
-    
-    # deal with data ----
+    # data formating ----
     m_in <- as.matrix(x)
     if (order_row) {
         order_row <- hclust(dist(m_in))$order
@@ -38,6 +39,7 @@ write_heatmap_table <- function(
         wb, as.data.frame(m_out), sheet = sheet, 
         rowNames = row_names, colNames = col_names
     )
+    # color ladder generating ----
     m_color <- round(scales::rescale(m_out, to = c(1, length(color))))
     m_color <- matrix(
         color[m_color], nrow = nrow(m_color), ncol = ncol(m_color)
@@ -50,7 +52,7 @@ write_heatmap_table <- function(
             style = createStyle(fgFill = m_color[i])
         )
     }
-    if (color_ladder) {
+    if (color_legend) {  # add legend
         index <- round(
             quantile(
                 1:length(color), probs = seq(1, 0, length.out = color_ladder)
@@ -97,6 +99,6 @@ rownames(test) <- paste("Gene", 1:20, sep = "")
 wb <- createWorkbook(creator = 'Su Na')
 addWorksheet(wb, sheetName = "excel heatmap", gridLines = T)
 # ↓ This function is self-added.
-write_heatmap_table(wb, sheet = 1, x = test, row_names = T, color_ladder = 20)
+write_heatmap_table(wb, sheet = 1, x = test, row_names = T, color_legend = 20)
 # ↑ This function is self-added.
 saveWorkbook(wb, overwrite = T, "test.xlsx")
